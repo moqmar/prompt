@@ -2,6 +2,8 @@
 
 A really fast command line prompt written in Go.
 
+![](https://raw.githubusercontent.com/moqmar/prompt/master/colors.go)
+
 ## Setup
 ```bash
 go get -u "gopkg.in/src-d/go-git.v4/..."
