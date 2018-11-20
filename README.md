@@ -2,7 +2,7 @@
 
 A really fast command line prompt written in Go.
 
-![](https://raw.githubusercontent.com/moqmar/prompt/master/colors.go)
+![](https://raw.githubusercontent.com/moqmar/prompt/master/screenshot.png)
 
 ## Setup
 
