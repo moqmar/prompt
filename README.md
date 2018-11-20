@@ -5,19 +5,24 @@ A really fast command line prompt written in Go.
 ![](https://raw.githubusercontent.com/moqmar/prompt/master/colors.go)
 
 ## Setup
+
 ```bash
-go get -u "gopkg.in/src-d/go-git.v4/..."
+sudo mkdir /opt/prompt && sudo chown $(id -u):$(id -g) /opt/prompt
 git clone https://github.com/moqmar/prompt.git /opt/prompt
+
+# Additional steps for development
+cd /opt/prompt
+go get -u "gopkg.in/src-d/go-git.v4/..."
 CGO_ENABLED=0 go build -ldflags '-s -w' prompt.go colors.go
 CGO_ENABLED=0 go build -ldflags '-s -w' rprompt.go colors.go
 ```
 
-### bash (`/etc/bash.bashrc` or `~/.bashrc`)
+### bash (add to `/etc/bash.bashrc` or `~/.bashrc`)
 ```bash
 PS1='$(cs="\[" ce="\]" s=" " /opt/prompt/rprompt "$?")$(cs="\[" ce="\]" /opt/prompt/prompt)'
 ```
 
-### zsh (`~/.zshrc`)
+### zsh (add to `~/.zshrc`)
 ```bash
 PROMPT='$(cs="%{" ce="%}" /opt/prompt/prompt)'
 RPROMPT='$(cs="%{" ce="%}" /opt/prompt/rprompt "$?")'
@@ -25,11 +30,14 @@ RPROMPT='$(cs="%{" ce="%}" /opt/prompt/rprompt "$?")'
 
 ### fish
 ```bash
+# add to ~/.config/fish/functions/fish_prompt.fish
 function fish_prompt
     /opt/prompt/prompt
 end
+
+# add to ~/.config/fish/functions/fish_right_prompt.fish
 function fish_right_prompt
-    /opt/prompt/rprompt
+    /opt/prompt/rprompt "$status"
 end
 ```
 
