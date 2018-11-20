@@ -19,6 +19,10 @@ CGO_ENABLED=0 go build -ldflags '-s -w' rprompt.go colors.go
 
 ### bash (add to `/etc/bash.bashrc` or `~/.bashrc`)
 ```bash
+# Small version without git and exit status
+PS1='$(cs="\[" ce="\]" /opt/prompt/prompt)'
+
+# Extended version, adds the rprompt at the front (as bash doesn't support a prompt on the right side)
 PS1='$(cs="\[" ce="\]" s=" " /opt/prompt/rprompt "$?")$(cs="\[" ce="\]" /opt/prompt/prompt)'
 ```
 
