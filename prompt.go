@@ -24,7 +24,7 @@ func main() {
 	//   0      1     2     3
 	// [... username uid homedir]
 	home, _ := ioutil.ReadFile("/etc/passwd")
-	homes := regexp.MustCompile(`(?:^|\n)([^:]+):[^:]+:([^:]+):[^:]+:[^:]+:([^:]+):`).FindAllStringSubmatch(string(home), -1)
+	homes := regexp.MustCompile(`(?:^|\n)([^:]*):[^:]*:([^:]*):[^:]*:[^:]*:([^:]*):`).FindAllStringSubmatch(string(home), -1)
 	euid := os.Geteuid()
 	host := ""
 	for _, user := range homes {
