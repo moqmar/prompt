@@ -1,10 +1,8 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
-	"regexp"
-	"strconv"
+	"os/exec"
 	"strings"
 	"time"
 )
@@ -23,25 +21,13 @@ func main() {
 
 	//   0      1     2     3
 	// [... username uid homedir]
-	home, _ := ioutil.ReadFile("/etc/passwd")
-	homes := regexp.MustCompile(`(?:^|\n)([^:]*):[^:]*:([^:]*):[^:]*:[^:]*:([^:]*):`).FindAllStringSubmatch(string(home), -1)
+	home, _ := os.LookupEnv("HOME")
 	euid := os.Geteuid()
-	host := ""
-	for _, user := range homes {
-		if user[2] == strconv.Itoa(euid) {
-			host += user[1]
-			break
-		}
-	}
-	if host == "" {
-		host += strconv.Itoa(euid)
-	}
-	hostname, _ := os.Hostname()
-	if hostname != "" {
-		host += "@" + hostname
-	}
 
-	os.Stdout.WriteString(Host + host + " ")
+	hostname, _ := os.Hostname()
+	username, _ := exec.Command("/usr/bin/id", "-un").Output()
+
+	os.Stdout.WriteString(Host + strings.TrimSpace(string(username)) + "@" + hostname + " ")
 
 	///////////////////////
 	// WORKING DIRECTORY //
@@ -56,15 +42,9 @@ func main() {
 
 	} else {
 
-		// Replace home paths with ~user (if shorter)
-		for _, user := range homes {
-			if user[2] == strconv.Itoa(euid) && strings.HasPrefix(dir, user[3]) { // current user
-				dir = "~/" + strings.TrimPrefix(strings.TrimPrefix(dir, user[3]), "/")
-				break
-			} else if strings.HasPrefix(dir, user[3]) && (user[2] == "0" || len(user[1]) < len(strings.Trim(user[3], "/"))) { // at least one characters saved, or username is root
-				dir = "~" + user[1] + "/" + strings.TrimPrefix(strings.TrimPrefix(dir, user[3]), "/")
-				break
-			}
+		// Replace home path with ~
+		if home != "" && strings.HasPrefix(dir, home) { // current user
+			dir = "~/" + strings.TrimPrefix(strings.TrimPrefix(dir, home), "/")
 		}
 
 		// Shorten path elements and color everything
